@@ -15,9 +15,9 @@ def farm_plot():
 def plant_plot():
 	if get_pos_x() == 0:
 		plant_carrot()
-	elif get_pos_x() == 1:
+	elif get_pos_x() in (1, 2):
 		plant_wood()
-	elif get_pos_x() == 2:
+	elif get_pos_x() == 3:
 		plant_grass()
 	else:
 		do_a_flip()
@@ -52,9 +52,23 @@ def plant_carrot():
 	plant(Entities.Carrot)
 
 def water_plot():
-	while get_water() != .25:
-		if not use_item(Items.Water):
-			break
+    ideal_level = 0
+    total_plots = get_world_size()**2
+    total_water = num_items(Items.Water)
+    
+    if (total_plots <= total_water):
+		ideal_level = 1
+	elif (total_plots/2 <= total_water):
+		ideal_level = 0.50
+	elif (total_plots/4 <= total_water):
+		ideal_level = 0.25
+	else:
+		ideal_level = 0
+
+	plot_water_level = get_water()
+	if plot_water_level <= 0.75:
+		while get_water() < ideal_level:
+			use_item(Items.Water)
 
 def plant_grass():
 	if get_ground_type() != Grounds.Grassland:
