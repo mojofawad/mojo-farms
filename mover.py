@@ -1,14 +1,68 @@
 from utils import is_even
+from geographer import get_quadrant_boundaries
 
-def move_next():
+def move_next(isQuadrant = False, quadrant = 0):
+	
+	if isQuadrant and quadrant != 0:
+		move_next_in_quadrant(quadrant)
+	else:
+		move_next_in_column()
+
+def move_next_in_quadrant(quadrant):
+	boundaries = get_quadrant_boundaries(quadrant)
+
+	x_start, y_start = boundaries[0]
+	x_end, y_end = boundaries[1]
+	
+	quadrant_size = get_world_size()/2
+	
+	true_x = get_pos_x()
+	true_y = get_pos_y()
+	
+	relative_x = true_x - quadrant_size
+		
+	column_is_even = is_even(relative_x)
+	grid_is_even = is_even(quadrant_size)
+	if not grid_is_even:
+		if (true_y == y_end and true_x == x_end):
+			go_next_quandrant(quadrant)
+		elif (column_is_even and true_y == y_end):
+			go_next_x()
+		elif (not column_is_even and true_y == y_start):
+			go_next_x()
+		else:
+			go_next_y(column_is_even)
+	elif grid_is_even:
+		if (true_y == y_start and true_x == x_end):
+			go_next_quadrant(quadrant)
+		elif (column_is_even and true_y == y_end):
+			go_next_x()
+		elif (not column_is_even and true_y == y_start):
+			go_next_x()
+		else:
+			go_next_y(column_is_even)
+
+def go_next_quadrant(current_quadrant):
+	next_quadrant = current_quadrant + 1
+	
+	if next_quadrant == 5:
+		next_quadrant = 1
+		
+	next_points = get_quadrant_boundaries(next_quadrant)
+	starting_position = next_points[0]
+	go_home(starting_position[0], starting_position[1])
+	
+	
+
+def move_next_in_column():
 	world_size = get_world_size()
 	maxPos = world_size - 1
-	
+
 	posX = get_pos_x()
 	posY = get_pos_y()
 	column_is_even = is_even(posX)
 	grid_is_even = is_even(world_size)
- 	
+
 	if not grid_is_even:
 		if (posY == maxPos and posX == maxPos):
 			go_home()
@@ -37,20 +91,35 @@ def go_next_y(column_is_even):
 	else:
 		move(South)
 			
-def go_home():
-	go_x_origin()
-	go_y_origin()
+def go_home(x = 0, y = 0):
+	go_x_origin(x)
+	go_y_origin(y)
 	
-def go_y_origin():
-	while get_pos_y() != 0:
-		if ((get_world_size()-1)/2 < get_pos_y()):
-			move(North)
-		else:
-			move(South)
-			
-def go_x_origin():
-	while get_pos_x() != 0:
-		if ((get_world_size()-1)/2 < get_pos_x()):
-			move(East)
-		else:
-			move(West)
+def go_y_origin(y = 0):
+	if y != 0:
+		while y != get_pos_y():
+			if y > get_pos_y():
+				move(North)
+			else:
+				move(South)
+	else:
+		while get_pos_y() != y:
+			if ((get_world_size()-1)/2 < get_pos_y()):
+				move(North)
+			else:
+				move(South)
+				
+def go_x_origin(x = 0):
+	if x != 0:
+		while x != get_pos_x():
+			if x > get_pos_x():
+				move(East)
+			else:
+				move(West)
+
+	else:
+		while get_pos_x() != x:
+			if ((get_world_size()-1)/2 < get_pos_x()):
+				move(East)
+			else:
+				move(West)

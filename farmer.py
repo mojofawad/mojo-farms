@@ -1,23 +1,39 @@
-from mover import move_next
 from utils import is_even
+from mover import move_next, go_home
 
-def farm(): 
-	for i in range(get_world_size()):
-		for j in range(get_world_size()):
-			farm_plot()
+def farm():
+	grid_is_even = is_even(get_world_size())
+	
+	if grid_is_even:
+		farm_in_quadrants()
+	else:
+		farm_in_columns()
+
+def farm_in_columns():
+	for column in range(get_world_size()):
+		for row in range(get_world_size()):
+			farm_plot(column)
 			move_next()
-			
-def farm_plot():
+	  
+def farm_in_quadrants():
+	go_home()
+	for quadrant in range(4):
+		for plots in range(4):
+			current_quadrant = quadrant + 1
+			farm_plot(quadrant)
+			move_next(True, current_quadrant)
+  
+def farm_plot(position):
 	if get_entity_type() != None:
 		harvest_plot()
-	plant_plot()
+	plant_plot(position)
 	
-def plant_plot():
-	if get_pos_x() == 0:
+def plant_plot(position):
+	if position == 0:
 		plant_carrot()
-	elif get_pos_x() in (1, 2):
+	elif position in (1, 2):
 		plant_wood()
-	elif get_pos_x() == 3:
+	elif position == 3:
 		plant_grass()
 	else:
 		do_a_flip()
@@ -52,11 +68,11 @@ def plant_carrot():
 	plant(Entities.Carrot)
 
 def water_plot():
-    ideal_level = 0
-    total_plots = get_world_size()**2
-    total_water = num_items(Items.Water)
-    
-    if (total_plots <= total_water):
+	ideal_level = 0
+	total_plots = get_world_size()**2
+	total_water = num_items(Items.Water)
+	
+	if (total_plots <= total_water):
 		ideal_level = 1
 	elif (total_plots/2 <= total_water):
 		ideal_level = 0.50
