@@ -1,26 +1,37 @@
 from utils import is_even
 
 def move_next():
-	maxPos = get_world_size() - 1
+	world_size = get_world_size()
+	maxPos = world_size - 1
 	
 	posX = get_pos_x()
 	posY = get_pos_y()
 	column_is_even = is_even(posX)
+	grid_is_even = is_even(world_size)
  	
-	if (posY == maxPos and posX == maxPos):
-		go_home()
-	elif (column_is_even and posY == maxPos):
-		go_next_x()
-	elif (not column_is_even and posY == 0):
-		go_next_x()
-	else:
-		go_next_y(column_is_even)
-		
+	if not grid_is_even:
+		if (posY == maxPos and posX == maxPos):
+			go_home()
+		elif (column_is_even and posY == maxPos):
+			go_next_x()
+		elif (not column_is_even and posY == 0):
+			go_next_x()
+		else:
+			go_next_y(column_is_even)
+	elif grid_is_even:
+		if (posY == 0 and posX == maxPos):
+			go_home()
+		elif (column_is_even and posY == maxPos):
+			go_next_x()
+		elif (not column_is_even and posY == 0):
+			go_next_x()
+		else:
+			go_next_y(column_is_even)
+
 def go_next_x():
 	move(East)
 
 def go_next_y(column_is_even):
-	
 	if column_is_even:
 		move(North)
 	else:
