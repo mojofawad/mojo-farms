@@ -1,2 +1,2 @@
-def is_even(pos):
-	return (pos % 2) == 0
+def is_even(number):
+	return (number % 2) == 0
