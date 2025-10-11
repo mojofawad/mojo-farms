@@ -1,4 +1,4 @@
-from farm_variety import farm
+from farmer import farm
 
 while True:
 	farm()
