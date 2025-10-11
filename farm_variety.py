@@ -1,5 +1,5 @@
 # main is being called at the bottom
-def main(): 
+def farm(): 
 	for i in range(get_world_size()):
 		for j in range(get_world_size()):
 			farm_plot()
@@ -83,6 +83,3 @@ def plant_carrot():
 def plant_grass():
 	if get_ground_type() != Grounds.Grassland:
 		till()
-
-while True:
-	main()
