@@ -18,25 +18,23 @@ def move_next():
 	
 	posX = get_pos_x()
 	posY = get_pos_y()
-	
-	if isEven(posX):
-		if (posY != maxPos):
-			go_next_y(posX)
-		elif (posY == maxPos and posX == maxPos):
-			go_home()
-		else:
-			go_next_x()
+	column_is_even = isEven(posX)
+ 	
+	if (posY == maxPos and posX == maxPos):
+		go_home()
+	elif (column_is_even and posY == maxPos):
+		go_next_x()
+	elif (not column_is_even and posY == 0):
+		go_next_x()
 	else:
-		if (posY != 0):
-			go_next_y(posX)
-		else:
-			go_next_x()
-
+		go_next_y(column_is_even)
+		
 def go_next_x():
 	move(East)
 
-def go_next_y(posX):    
-	if isEven(posX):
+def go_next_y(column_is_even):
+	
+	if column_is_even:
 		move(North)
 	else:
 		move(South)
