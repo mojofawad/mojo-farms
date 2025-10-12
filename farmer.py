@@ -69,9 +69,11 @@ def plant_plot(position):
 	elif position in (1, 2):
 		plant_wood()
 	elif position == 3:
-		plant_grass()
+		# plant_grass()
+		plant_carrot()
 	else:
 		do_a_flip()
+	use_item(Items.Fertilizer)
 
 
 def harvest_plot():
