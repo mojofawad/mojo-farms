@@ -1,3 +1,5 @@
+from __builtins__ import *
+
 def get_quadrant_boundaries(quadrant):
 	starting_boundary = get_quadrant_start(quadrant)
 	ending_boundary = get_quadrant_end(quadrant)

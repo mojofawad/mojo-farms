@@ -1,3 +1,4 @@
+from __builtins__ import *
 from utils import is_even
 from geographer import get_quadrant_boundaries
 
@@ -28,9 +29,9 @@ def move_next_in_quadrant(quadrant):
 	if not grid_is_even:
 		if (true_y == y_end and true_x == x_end):
 			go_next_quadrant(quadrant)
-		elif (column_is_even and true_y == y_start):
+		elif (column_is_even and true_y == y_end):
 			go_next_x()
-		elif (not column_is_even and true_y == y_end):
+		elif (not column_is_even and true_y == y_start):
 			go_next_x()
 		else:
 			go_next_y(column_is_even)

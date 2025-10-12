@@ -1,3 +1,4 @@
+from __builtins__ import *
 from utils import is_even
 from mover import move_next, go_home
 
@@ -115,7 +116,8 @@ def water_plot():
 		ideal_level = 0
 
 	plot_water_level = get_water()
-	if plot_water_level == 0:
+	water_empty = (plot_water_level == 0)
+	if water_empty:
 		while get_water() < ideal_level:
 			use_item(Items.Water)
 
