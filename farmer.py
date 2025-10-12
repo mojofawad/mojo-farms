@@ -1,13 +1,13 @@
 from utils import is_even
 from mover import move_next, go_home
 
-def farm():
+def farm(plant = []):
 	grid_is_even = is_even(get_world_size())
 	
 	if grid_is_even:
-		farm_in_quadrants()
+		farm_in_quadrants(plant)
 	else:
-		farm_in_columns()
+		farm_in_columns(plant)
 
 def farm_in_columns():
 	for column in range(get_world_size()):
@@ -15,20 +15,41 @@ def farm_in_columns():
 			farm_plot(column)
 			move_next()
 	  
-def farm_in_quadrants():
+def farm_in_quadrants(plant):
 	go_home()
+	world_size = get_world_size()
+	plots = (world_size/2)**2
 	for quadrant in range(4):
-		for plots in range(4):
+		for plot in range(plots):
 			current_quadrant = quadrant + 1
-			farm_plot(quadrant)
+			farm_plot(quadrant, plant)
 			move_next(True, current_quadrant)
   
-def farm_plot(position):
+def farm_plot(position, plant):
 	if get_entity_type() != None:
 		harvest_plot()
-	plant_plot(position)
+	if len(plant) != 0:
+		plant_thing(plant[0])
+	else:
+		plant_plot(position, plant)
+
+def plant_thing(plant = Entities.Grass):
+	if plant == Entities.Pumpkin:
+		plant_pumpkin()
+	else:
+		plant(plant)
+
+def plant_pumpkin():
+	if (get_ground_type() != Grounds.Soil):
+		till()
+	water_plot()
+	plant(Entities.Pumpkin)
+	while not can_harvest():
+		if (get_entity_type() == Entities.Dead_Pumpkin):
+			plant(Entities.Pumpkin)
+	harvest_pumpkin()
 	
-def plant_plot(position):
+def plant_plot(position, plant):
 	if position == 0:
 		plant_carrot()
 	elif position in (1, 2):
@@ -39,9 +60,21 @@ def plant_plot(position):
 		do_a_flip()
 		
 def harvest_plot():
-	while not can_harvest():
-		pet_the_piggy()
-	harvest()
+	if get_entity_type() != Entities.Pumpkin:
+		while not can_harvest():
+			pet_the_piggy()
+		harvest()
+
+def harvest_pumpkin():
+	world_size = get_world_size()
+	quadrant_size = world_size/2
+	if is_even(quadrant_size):
+		last_y = world_size - quadrant_size
+		if get_pos_x() == (world_size - 1) and get_pos_y() == last_y:
+			harvest()
+	else:
+		if get_pos_x() == (world_size - 1) and get_pos_y() == (world_size - 1):
+			harvest()
 		
 def plant_wood():
 	grid_is_even = is_even(get_world_size())

@@ -19,16 +19,18 @@ def move_next_in_quadrant(quadrant):
 	true_x = get_pos_x()
 	true_y = get_pos_y()
 	
-	relative_x = true_x - quadrant_size
+	relative_x = true_x
+	if true_x >= quadrant_size:
+		relative_x = true_x - quadrant_size
 		
 	column_is_even = is_even(relative_x)
 	grid_is_even = is_even(quadrant_size)
 	if not grid_is_even:
 		if (true_y == y_end and true_x == x_end):
-			go_next_quandrant(quadrant)
-		elif (column_is_even and true_y == y_end):
+			go_next_quadrant(quadrant)
+		elif (column_is_even and true_y == y_start):
 			go_next_x()
-		elif (not column_is_even and true_y == y_start):
+		elif (not column_is_even and true_y == y_end):
 			go_next_x()
 		else:
 			go_next_y(column_is_even)
