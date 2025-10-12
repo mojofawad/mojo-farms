@@ -115,7 +115,7 @@ def water_plot():
 		ideal_level = 0
 
 	plot_water_level = get_water()
-	if plot_water_level <= 0.75:
+	if plot_water_level == 0:
 		while get_water() < ideal_level:
 			use_item(Items.Water)
 
