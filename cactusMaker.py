@@ -14,7 +14,7 @@ def sort_field():
 		sort_row()
 		move(North)
 		move(East)
-	reset.go_home()
+	mover.go_home()
 	for j in range(size):
 		sort_col()
 		move(East)

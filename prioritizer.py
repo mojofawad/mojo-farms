@@ -41,9 +41,13 @@ def get_cheapest(items):
 	
 def get_items():
 	items = set()
-	items_to_skip = [Items.Water, Items.Fertilizer, Items.Bone]
+	items_to_skip = [Items.Water, Items.Fertilizer, Items.Bone, Items.Gold]
 	for item in Items:
 		if num_unlocked(item) != 0 and item not in items_to_skip:
 			items.add(item)
+	# if len(items) == 0:
+	# 	for item in Unlocks:
+	# 		if num_unlocked(item) != 0:
+	# 			items.add(item)
 	return items
 			

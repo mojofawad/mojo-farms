@@ -44,7 +44,7 @@ def farm_plot(position, entity):
 
 
 def plant_thing(entity_to_plant=Entities.Grass):
-	if entity_to_plant == Entities.Pumpkin:
+	if entity_to_plant == Items.Pumpkin:
 		plant_pumpkin()
 	elif entity_to_plant == Items.Hay:
 		plant(Entities.Grass)
