@@ -14,7 +14,7 @@ def get_priority():
 	return priority
 
 def get_easiest_priority(items):
-	for item in items:
+	for item in items: # wtf?
 		priority_item = get_cheapest(items)
 	
 	return priority_item
@@ -41,7 +41,7 @@ def get_cheapest(items):
 	
 def get_items():
 	items = set()
-	items_to_skip = [Items.Water, Items.Fertilizer, Items.Bone, Items.Gold]
+	items_to_skip = [Items.Gold, Items.Water, Items.Fertilizer, Items.Bone]
 	for item in Items:
 		if num_unlocked(item) != 0 and item not in items_to_skip:
 			items.add(item)

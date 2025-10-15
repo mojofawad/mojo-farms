@@ -1,5 +1,6 @@
 from __builtins__ import *
 
+
 def get_quadrant_boundaries(quadrant):
 	starting_boundary = get_quadrant_start(quadrant)
 	ending_boundary = get_quadrant_end(quadrant)
@@ -75,4 +76,17 @@ def get_ending_col(quadrant):
 		return world_size - 1	
 	else:
 		do_a_flip()
-		
+
+
+def get_field_size(quadrant = 0):
+	relative_size = get_size_to_farm(quadrant)
+	plots = relative_size ** 2
+	return plots
+
+
+def get_size_to_farm(quadrant = 0):
+	world_size = get_world_size()
+	if quadrant == 0:
+		return world_size
+	else:
+		return world_size/2

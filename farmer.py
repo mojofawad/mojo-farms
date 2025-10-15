@@ -1,13 +1,14 @@
 from __builtins__ import *
+from geographer import get_field_size
+from mover import move_next, go_to_quadrant_home
 from utils import is_even
-from mover import move_next, go_home
 
 
 def farm(entity=[]):
 	grid_is_even = is_even(get_world_size())
 
 	if grid_is_even:
-		farm_in_quadrants(entity)
+		farm_in_quadrants()
 	else:
 		farm_in_columns(entity)
 
@@ -19,29 +20,61 @@ def farm_in_columns(entity):
 			move_next()
 
 
-def farm_in_quadrants(entity):
-	go_home()
-	world_size = get_world_size()
-	plots = (world_size / 2) ** 2
-	for quadrant in range(4):
-		for plot in range(plots):
-			do_some_shit(entity, quadrant)
+def farm_in_quadrants():
+	go_to_map_center()
+	for i in range(4):
+		quadrant = i + 1
+		if quadrant == 1:
+			spawn_drone(run_quadrant_one)
+		elif quadrant == 2:
+			spawn_drone(run_quadrant_two)
+		elif quadrant == 3:
+			spawn_drone(run_quadrant_three)
+		elif quadrant == 4:
+			run_quadrant_four()
 
 
-def do_some_shit(entity, quadrant):
-	current_quadrant = quadrant + 1
-	farm_plot(quadrant, entity)
-	move_next(True, current_quadrant)
+def go_to_map_center():
+	go_to_quadrant_home(4)  # go to center area
 
 
-def farm_plot(position, entity):
+def water_quadrant_one():
+	water_quadrant(1)
+	
+def water_quadrant_two():
+	water_quadrant(2)
+	
+def water_quadrant_three():
+	water_quadrant(3)
+	
+def water_quadrant_four():
+	water_quadrant(4)
+	
+def water_quadrant(quadrant = 0):
+	plots = get_field_size(quadrant)
+	run_quadrant(plots, quadrant, [Items.Water])
+
+
+def run_quadrant(plots, quadrant, entity = []):
+	for plot in range(plots):
+		do_action_and_move_next_in_quadrant(entity, quadrant)
+
+
+def do_action_and_move_next_in_quadrant(entity = [], quadrant = 0):
+	if len(entity) != 0 and entity[0] == Items.Water:
+		water_plot()
+	else:
+		farm_plot(quadrant)
+	move_next(True, quadrant)
+
+
+def farm_plot(quadrant, entity = []):
 	if get_entity_type() != None:
 		harvest_plot()
-	if len(entity) != 0:
+	if len(entity) != 0 and entity[0] not in (Items.Carrot, Items.Wood, Items.Hay):
 		plant_thing(entity[0])
 	else:
-		plant_plot(position)
-
+		plant_plot(quadrant)
 
 def plant_thing(entity_to_plant=Entities.Grass):
 	if entity_to_plant == Items.Pumpkin:
@@ -49,13 +82,12 @@ def plant_thing(entity_to_plant=Entities.Grass):
 	elif entity_to_plant == Items.Hay:
 		plant(Entities.Grass)
 	else:
-		plant(entity_to_plant)
+		plant_plot()
 
 
 def plant_pumpkin():
 	if get_ground_type() != Grounds.Soil:
 		till()
-	water_plot()
 	plant(Entities.Pumpkin)
 	while not can_harvest():
 		if get_entity_type() == Entities.Dead_Pumpkin:
@@ -63,17 +95,18 @@ def plant_pumpkin():
 	harvest_pumpkin()
 
 
-def plant_plot(position):
-	if position == 0:
-		plant_carrot()
-	elif position in (1, 2):
+def plant_plot(quadrant):
+	if quadrant in (0, 1):
+		plant_grass()
+	elif quadrant in (2, 3):
 		plant_wood()
-	elif position == 3:
+	elif quadrant == 4:
 		# plant_grass()
 		plant_carrot()
 	else:
 		do_a_flip()
-	use_item(Items.Fertilizer)
+	if num_items(Items.Fertilizer) > 5:
+		use_item(Items.Fertilizer)
 
 
 def harvest_plot():
@@ -99,8 +132,6 @@ def plant_wood():
 	grid_is_even = is_even(get_world_size())
 	current_position_is_even = is_even(get_pos_x() + get_pos_y())
 
-	water_plot()
-
 	if grid_is_even:
 		if current_position_is_even:
 			plant(Entities.Tree)
@@ -116,7 +147,7 @@ def plant_wood():
 def plant_carrot():
 	if get_ground_type() != Grounds.Soil:
 		till()
-	water_plot()
+
 	plant(Entities.Carrot)
 
 
@@ -148,3 +179,46 @@ def get_ideal_level():
 def plant_grass():
 	if get_ground_type() != Grounds.Grassland:
 		till()
+
+def water_plots():
+	world_size = get_world_size()
+	for i in range(world_size):
+		for j in range(world_size):
+			water_plot()
+			move(North)
+		move(East)
+
+def run_quadrant_one():
+	start_quadrant_task(1)
+
+
+def run_quadrant_two():
+	start_quadrant_task(2)
+
+
+def run_quadrant_three():
+	start_quadrant_task(3)
+
+
+def run_quadrant_four():
+	start_quadrant_task(4)
+
+
+def start_quadrant_task(quadrant):
+	plots = get_field_size(quadrant)
+	go_to_quadrant_home(quadrant)
+	spawn_watering_drone_for_quadrant(quadrant)
+	do_a_flip()
+	run_quadrant(plots, quadrant)
+
+
+def spawn_watering_drone_for_quadrant(quadrant):
+	if quadrant == 1:
+		spawn_drone(water_quadrant_one)
+	elif quadrant == 2:
+		spawn_drone(water_quadrant_two)
+	elif quadrant == 3:
+		spawn_drone(water_quadrant_three)
+	elif quadrant == 4:
+		spawn_drone(water_quadrant_four)
+	

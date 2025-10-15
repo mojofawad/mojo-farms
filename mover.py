@@ -45,17 +45,23 @@ def move_next_in_quadrant(quadrant):
 		else:
 			go_next_y(column_is_even)
 
+
 def go_next_quadrant(current_quadrant):
 	next_quadrant = current_quadrant + 1
 	
 	if next_quadrant == 5:
 		next_quadrant = 1
-		
-	next_points = get_quadrant_boundaries(next_quadrant)
-	starting_position = next_points[0]
+
+	starting_position = get_quadrant_start(next_quadrant)
 	go_home(starting_position[0], starting_position[1])
+
+
+def get_quadrant_start(quadrant):
+	quadrant_boundaries = get_quadrant_boundaries(quadrant)
 	
-	
+	starting_position = quadrant_boundaries[0]
+	return starting_position
+
 
 def move_next_in_column():
 	world_size = get_world_size()
@@ -126,3 +132,11 @@ def go_x_origin(x = 0):
 				move(East)
 			else:
 				move(West)
+
+
+def go_to_quadrant_home(quadrant):
+	if quadrant == 0:
+		go_home()
+	else:
+		starting_position = get_quadrant_start(quadrant)
+		go_home(starting_position[0], starting_position[1])
